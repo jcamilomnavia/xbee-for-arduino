@@ -24,6 +24,7 @@ void Xbee::setPayload(string payload) {
     for (int i = 0; i < payload.length(); i++) { 
         _payloadData[i] = payload[i];
     }
+    _payloadLength = payload.length();
     _dataFrameLength+= payload.length();
 }
 
@@ -43,12 +44,16 @@ uint8_t Xbee::getOption(){
   return _option;
 }
 
-uint8_t *Xbee::getPayload(){
+uint8_t* Xbee::getPayload(){
   return _payloadData;
 }
 
-uint8_t Xbee::getDataFrameLength(){
+uint16_t Xbee::getDataFrameLength(){
   return _dataFrameLength;
+}
+
+uint8_t Xbee::getPayloadSize(){
+  return _payloadLength
 }
 
 void Xbee::send(){
@@ -72,18 +77,21 @@ void Xbee::send(){
   _checksum+= getFrameId();
 
   //Enviar Direccion destino y sumar al checksum
-  // TODO (Descomponer en partes de 8 bits?)
-  write(getDestinationAddress());
-  _checksum+= getDestinationAddress();
+  //(Descomponer en partes de 8 bits)
+  int bits [8] = { 8, 16, 24, 32, 40, 48, 56, 64};
+  for(int j = 0; j < 8; j++ ){
+    uint8_t addr = (getDestinationAddress() >> bits[j]) & 0xff;
+    write(addr);
+    _checksum+= addr;
+  }
 
   // Enviar opciones y sumar al checksum
   write(getOption());
   _checksum+= getOption();
 
   // Enviar Payload y sumar al checksum
-  // TODO (get array of message payload)
-  for(int i = 0; i < 7; i++){
-
+  for(int i = 0; i < getPayloadSize(); i++){
+    write(_payloadData[i]);
     _checksum+= _payloadData[i];
   }
 

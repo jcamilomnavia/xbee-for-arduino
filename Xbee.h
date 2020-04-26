@@ -30,7 +30,8 @@ class Xbee {
     uint64_t _destinationAddress;
     uint8_t _option;
     uint8_t _payloadData[];
-    uint8_t _dataFrameLength;
+    uint8_t _payloadLength;
+    uint16_t _dataFrameLength;
     uint8_t _checksum;
   
   public:
@@ -44,8 +45,9 @@ class Xbee {
     uint8_t getFrameId();
     uint8_t getOption();
     uint64_t getDestinationAddress();
-    uint8_t *getPayload();
-    uint8_t getDataFrameLength();
+    uint8_t* getPayload();
+    uint8_t getPayloadSize();
+    uint16_t getDataFrameLength();
 
     void send();
     void write(uint8_t val);
