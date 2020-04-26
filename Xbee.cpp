@@ -72,6 +72,7 @@ void Xbee::send(){
   _checksum+= getFrameId();
 
   //Enviar Direccion destino y sumar al checksum
+  // TODO (Descomponer en partes de 8 bits?)
   write(getDestinationAddress());
   _checksum+= getDestinationAddress();
 
@@ -80,7 +81,7 @@ void Xbee::send(){
   _checksum+= getOption();
 
   // Enviar Payload y sumar al checksum
-  // get array of message payload
+  // TODO (get array of message payload)
   for(int i = 0; i < 7; i++){
 
     _checksum+= _payloadData[i];
@@ -105,6 +106,7 @@ void Xbee::reset(){
   _frameType = DEFAULT_FRAME_TYPE;
   _dataFrameLength = TX_64_API_LENGTH;
   _option = DISABLE_ACK_OPTION;
+  // TODO (Como reseteo un arreglo?)
   // _payloadData = ; reset to nothing
 }
 
