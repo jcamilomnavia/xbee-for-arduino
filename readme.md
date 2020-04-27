@@ -30,6 +30,7 @@ El Xbee debe estar conectado al **Serial** del Arduino. Si es conectado al Seria
 Xbee myXbee = Xbee();
 
 void setup(){
+  Serial.begin(9600);
   myXbee.setPayload("Hola mundo");
 }
 

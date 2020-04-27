@@ -1,9 +1,8 @@
 #ifndef Xbee_h
 #define Xbee_h
 
-// include types & constants of Wiring core API
+// core API
 #include "Arduino.h"
-#include "HardwareSerial.h"
 
 // Bit de comienzo de la trama
 #define START_BYTE 0x7e 
