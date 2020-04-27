@@ -1,9 +1,9 @@
 #ifndef Xbee_h
 #define Xbee_h
 
-#if defined(ARDUINO)
-	#include "Arduino.h"
-#endif
+// include types & constants of Wiring core API
+#include "Arduino.h"
+#include "WConstants.h"
 
 // Bit de comienzo de la trama
 #define START_BYTE 0x7e 
