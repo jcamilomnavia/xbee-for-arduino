@@ -106,7 +106,7 @@ void Xbee::send(){
 }
 
 void Xbee::write(uint8_t val) {
-  Serial.write(val);
+  Serial.print(val,HEX);
 }
 
 void Xbee::reset(){
