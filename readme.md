@@ -4,9 +4,26 @@ Esta libreria pretende transmitir tramas api con el modulo Xbee S1, donde el usu
 
 Para entender mejor la libreria se explicaran las tramas api con direcciones de 64 bits para el modulo Xbee s1.
 
-# Uso
+## Instalación
+Arduino incluye un manejador de librerias para una facil instalacion. Del menu Programa/Sketch selecciona ```Incluir libreria->Añadir biblioteca .ZIP``` y selecciona el archivo .zip de esta libreria. 
+
+Una segunda opcion es arrastrar la carpeta de esta libreria manualmente a la carpeta de ```librerias``` de Arduino.
+
+Para usar esta libreria en tu sketch deberás añadir la siguiente linea al principio de tu archivo ```.ino```
+
+```C
+#include <Xbee.h>
+```
+
+## Configuración 
+
+Para usar esta libreria, tu XBee debe estar configurado en modo API (AP=1). Puedes leer la documentacion que esta mas abajo para ver que tipos de modo hay en Xbee.
+
+## Uso
 
 El Xbee debe estar conectado al **Serial** del Arduino. Si es conectado al Serial1 o cualquier otro, no funcionará.
+
+### Ejemplo
 
 ```C
 #include "Xbee.h"
@@ -23,7 +40,9 @@ void loop(){
 }
 ```
 
-# Especificaciones de la trama API
+## Documentación de XBee
+
+### Especificaciones de la trama API
 
 El Xbee soporta 3 modos de operación, de los cuales 2 son en modo api. Estos se pueden configurar en la terminal del Xbee en XCTU.
 Estas son los modos:
@@ -36,7 +55,7 @@ Estas son los modos:
 
 Las estructura de las tramas API depende del modo que se escoja. En esta libreria solo se implementará la opcion 1, sin caracteres de escape.
 
-## Operacion AP 1
+### Operación AP 1
 
 La siguiente tabla muestra la estructura de la trama cuando se habilita este modo:
 
