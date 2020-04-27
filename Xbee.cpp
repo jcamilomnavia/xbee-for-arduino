@@ -1,6 +1,4 @@
 #include "Xbee.h"
-#include "HardwareSerial.h"
-#include "WProgram.h"
 
 Xbee::Xbee(){
   Serial.begin(9600);

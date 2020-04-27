@@ -3,7 +3,7 @@
 
 // include types & constants of Wiring core API
 #include "Arduino.h"
-#include "WConstants.h"
+#include "HardwareSerial.h"
 
 // Bit de comienzo de la trama
 #define START_BYTE 0x7e 
