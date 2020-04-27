@@ -106,7 +106,11 @@ void Xbee::send(){
 }
 
 void Xbee::write(uint8_t val) {
+  if (val < 16) {
+    Serial.print(0);
+  }
   Serial.print(val,HEX);
+  Serial.print(" ");
 }
 
 void Xbee::reset(){
