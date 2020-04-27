@@ -8,12 +8,12 @@
 #define START_BYTE 0x7e 
 
 // Para el modo AP 1
-#define DEFAULT_FRAME_ID 1
-#define DEFAULT_FRAME_TYPE 1 
+#define DEFAULT_FRAME_ID 0x01
+#define DEFAULT_FRAME_TYPE 0x01 
 
 // Opciones de ACK para la trama
-#define ACK_OPTION 0
-#define DISABLE_ACK_OPTION 1
+#define ACK_OPTION 0x00
+#define DISABLE_ACK_OPTION 0x01
 
 // Tamaños no variables
 #define TX_64_API_LENGTH 11 //ADDR64(8), OPCION, TYPE, ID
