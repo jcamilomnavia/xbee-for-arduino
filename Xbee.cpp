@@ -20,7 +20,7 @@ void Xbee::setOption(uint8_t ack_option) {
   _option = ack_option;
 }
 
-void Xbee::setPayload(string payload) {
+void Xbee::setPayload(String payload) {
     for (int i = 0; i < payload.length(); i++) { 
         _payloadData[i] = payload[i];
     }
@@ -44,7 +44,7 @@ uint8_t Xbee::getOption(){
   return _option;
 }
 
-uint8_t* Xbee::getPayload(){
+uint8_t *Xbee::getPayload(){
   return _payloadData;
 }
 
@@ -53,7 +53,7 @@ uint16_t Xbee::getDataFrameLength(){
 }
 
 uint8_t Xbee::getPayloadSize(){
-  return _payloadLength
+  return _payloadLength;
 }
 
 void Xbee::send(){

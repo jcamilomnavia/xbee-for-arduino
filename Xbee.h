@@ -20,8 +20,6 @@
 #define TX_64_API_LENGTH 11 //ADDR64(8), OPCION, TYPE, ID
 
 #include <inttypes.h>
-#include <string>
-using std::string;
 
 class Xbee {
   private:
@@ -29,7 +27,7 @@ class Xbee {
     uint8_t _frameId;
     uint64_t _destinationAddress;
     uint8_t _option;
-    uint8_t _payloadData[];
+    uint8_t _payloadData[100];
     uint8_t _payloadLength;
     uint16_t _dataFrameLength;
     uint8_t _checksum;
@@ -39,13 +37,13 @@ class Xbee {
     void setFrameId(uint8_t frameId);
     void setDestinationAddress(uint64_t addr64);
     void setOption(uint8_t ack_option);
-    void setPayload(string payload);
+    void setPayload(String payload);
 
     uint8_t getFrameType();
     uint8_t getFrameId();
     uint8_t getOption();
     uint64_t getDestinationAddress();
-    uint8_t* getPayload();
+    uint8_t *getPayload();
     uint8_t getPayloadSize();
     uint16_t getDataFrameLength();
 
