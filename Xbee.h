@@ -9,7 +9,7 @@
 
 // Para el modo AP 1
 #define DEFAULT_FRAME_ID 0x01
-#define DEFAULT_FRAME_TYPE 0x01 
+#define DEFAULT_FRAME_TYPE 0x00 // Para direcciones de 64 bits
 
 // Opciones de ACK para la trama
 #define ACK_OPTION 0x00

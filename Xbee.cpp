@@ -78,7 +78,7 @@ void Xbee::send(){
 
   //Enviar Direccion destino y sumar al checksum
   //(Descomponer en partes de 8 bits)
-  int bits [8] = { 8, 16, 24, 32, 40, 48, 56, 64};
+  int bits [8] = { 56, 48, 40, 32, 24, 16, 8, 0};
   for(int j = 0; j < 8; j++ ){
     uint8_t addr = (getDestinationAddress() >> bits[j]) & 0xff;
     write(addr);
