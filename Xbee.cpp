@@ -77,7 +77,7 @@ void Xbee::send(){
   _checksum+= getFrameId();
 
   //Enviar Direccion destino y sumar al checksum
-  //(Descomponer en partes de 8 bits)
+  //(Descomponer en pares de 8 bits)
   int bits [8] = { 56, 48, 40, 32, 24, 16, 8, 0};
   for(int j = 0; j < 8; j++ ){
     uint8_t addr = (getDestinationAddress() >> bits[j]) & 0xff;
@@ -118,7 +118,6 @@ void Xbee::reset(){
   _frameType = DEFAULT_FRAME_TYPE;
   _dataFrameLength = TX_64_API_LENGTH;
   _option = DISABLE_ACK_OPTION;
-  // TODO (Como reseteo un arreglo?)
   // _payloadData = ; reset to nothing
 }
 
