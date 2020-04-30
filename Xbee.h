@@ -46,7 +46,7 @@ class Xbee {
     uint8_t _msbLength;
     uint8_t _lsbLength;
     bool _hasError;
-    uint8_t _error;
+    String _error;
     uint8_t _pos;
     uint8_t b; // last byte read
 
@@ -64,7 +64,7 @@ class Xbee {
     void setmsbLength(uint8_t msb);
     void setlsbLength(uint8_t lsb);
     void setComplete(bool complete);
-    void setError(uint8_t error);
+    void setError(String error);
 
     uint8_t getFrameType();
     uint8_t getFrameId();
@@ -85,8 +85,8 @@ class Xbee {
     void send();
     void write(uint8_t val);
     void receive();
-    void available();
-    void read()
+    bool available();
+    uint8_t read();
     void writeDecode();
 
     void reset();

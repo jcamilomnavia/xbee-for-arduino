@@ -56,12 +56,7 @@ void Xbee::setlsbLength(uint8_t lsb)
   _lsbLength = lsb;
 }
 
-void Xbee::setComplete(bool complete)
-{
-  _complete = complete;
-}
-
-void Xbee::setError(uint8_t error)
+void Xbee::setError(String error)
 {
   _error = error;
   _hasError = true;
@@ -145,10 +140,10 @@ void Xbee::send()
 
   //Enviar Direccion destino 16 bits y sumar al checksum
   //(Descomponer en pares de 8 bits)
-  int bits[2] = {8, 0};
+  int bits16[2] = {8, 0};
   for (int j = 0; j < 2; j++)
   {
-    uint8_t addr = (getDestinationAddress16() >> bits[j]) & 0xff;
+    uint8_t addr = (getDestinationAddress16() >> bits16[j]) & 0xff;
     write(addr);
     _checksum += addr;
   }
@@ -184,8 +179,10 @@ void Xbee::write(uint8_t val)
   {
     Serial.print(0);
   }
-  Serial.print(val, HEX);
-  Serial.print(" ");
+  char val2 = val;
+  Serial.print(val2);
+  //Serial.print(val,HEX);
+  //Serial.print(" ");
 }
 
 void Xbee::reset()
@@ -199,12 +196,12 @@ void Xbee::reset()
   // _payloadData = ; reset to nothing
 }
 
-void Xbee::available()
+bool Xbee::available()
 {
-  return Serial.available();
+  return Serial.available() > 0;
 }
 
-void Xbee::read()
+uint8_t Xbee::read()
 {
   return Serial.read();
 }
@@ -222,10 +219,12 @@ void Xbee::setDataFrameLength(uint16_t frameLength)
 void Xbee::receive()
 {
   _checksum = 0;
+
   while (available())
   {
 
     b = read();
+    Serial.print(b);
 
     if (_pos > 0 && b == START_BYTE)
     {
@@ -259,7 +258,7 @@ void Xbee::receive()
         setError("Error: Tipo de trama no soportada");
         return;
       } else {
-        setFrameType(b);
+        //setFrameType(b);
       }
       _pos++;
       break;
@@ -269,14 +268,14 @@ void Xbee::receive()
       break;
     case 5 ... 12: 
       // 64 bit address
-      int bits[8] = {56, 48, 40, 32, 24, 16, 8, 0};
-      _destinationAddress = b << bits[pos-5];
+      int addr64[8] = {56, 48, 40, 32, 24, 16, 8, 0};
+      _destinationAddress = b << addr64[_pos-5];
       _pos++;
       break;
     case 13 ... 14: 
       // 16 bit address
-      int bits[2] = {8, 0};
-      _destinationAddress16 = b << bits[pos-13];
+      int addr16[2] = {8, 0};
+      _destinationAddress16 = b << addr16[_pos-13];
       _pos++;
       break;
     case 15: 
@@ -296,7 +295,7 @@ void Xbee::receive()
         return;
       }
 
-      if (_pos == (getPacketLength() + 3))
+      if (_pos == (getPacketReceivedLength() + 3))
       {
         if ((_checksum & 0xff) == 0xff)
         {
@@ -331,16 +330,28 @@ void Xbee::writeDecode()
   }
 
   Serial.print("Tamaño Trama: ");
-  Serial.println(getPacketLength());
+  Serial.println(getPacketReceivedLength());
 
   Serial.print("Frame ID: ");
-  Serial.println(getPacketLength());
+  Serial.println(getFrameId());
 
   Serial.print("Direccion: ");
-  Serial.println(_destinationAddress,HEX);
+  int bits[8] = {56, 48, 40, 32, 24, 16, 8, 0};
+  for (int j = 0; j < 8; j++)
+  {
+    uint8_t addr = (getDestinationAddress() >> bits[j]) & 0xff;
+    Serial.print(addr,HEX);
+  }
+  Serial.println();
 
   Serial.print("Direccion 16 bits: ");
-  Serial.println(_destinationAddress16,HEX);
+  int bits16[2] = {8, 0};
+  for (int j = 0; j < 2; j++)
+  {
+    uint8_t addr16 = (getDestinationAddress16() >> bits16[j]) & 0xff;
+    Serial.print(addr16,HEX);
+  }
+  Serial.println();
 
   Serial.print("BroadCast Radius: ");
   Serial.println(getBroadcastRadius());
@@ -351,12 +362,12 @@ void Xbee::writeDecode()
   Serial.print("Payload: ");
   for (int i = 0; i < getPayloadSize(); i++)
   {
-    write(_payloadData[i]);
-    _checksum += _payloadData[i];
+    char val = _payloadData[i];
+    Serial.print(val);
   }
-  Serial.println(getPayload());
+  Serial.println();
 
   Serial.print("Checksum: ");
-  Serial.print("Valido");
-  Serial.println(_checksum);
+  Serial.print("Valido - ");
+  Serial.println(_checksum, HEX);
 }
