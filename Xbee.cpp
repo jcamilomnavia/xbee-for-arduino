@@ -11,10 +11,6 @@ Xbee::Xbee()
   _option = OPTION_DEFAULT;
 }
 
-void Xbee::setSerial(Stream serial){
-
-}
-
 void Xbee::setFrameId(uint8_t frameId)
 {
   _frameId = frameId;
@@ -184,9 +180,10 @@ void Xbee::write(uint8_t val)
     Serial.print(0);
   }
   char val2 = val;
-  Serial.print(val2);
-  //Serial.print(val,HEX);
-  //Serial.print(" ");
+  //Serial.print(val2);
+  Serial.print(val,HEX);
+  Serial.print(" ");
+  Serial.print3(val);
 }
 
 void Xbee::reset()
