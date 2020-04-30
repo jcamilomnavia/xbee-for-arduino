@@ -99,6 +99,7 @@ class Xbee {
     uint8_t _addressReceived[8];
     uint8_t _addressReceived16[2];
     bool _hasError;
+    bool _complete;
     String _error;
     /**
      * @brief Posicion de lectura

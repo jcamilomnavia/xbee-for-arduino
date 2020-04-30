@@ -60,6 +60,7 @@ void Xbee::setError(String error)
 {
   _error = error;
   _hasError = true;
+  _complete = true;
 }
 
 uint8_t Xbee::getFrameType()
@@ -300,6 +301,7 @@ void Xbee::receive()
         if (_checksum == b)
         {
           // Serial.write("Checksum valido");
+          _complete = true;
         }
         else
         {
@@ -314,9 +316,12 @@ void Xbee::receive()
       {
         _payloadData[_pos - 17] = b;
         _payloadLength++;
-        _pos++;
+	_pos++;
       }
     }
+  }
+  if(_complete){
+    writeDecode();
   }
 }
 
@@ -369,4 +374,5 @@ void Xbee::writeDecode()
   Serial.print("Checksum: ");
   Serial.print("Valido - ");
   Serial.println(_checksum, HEX);
+  _complete = false;
 }
