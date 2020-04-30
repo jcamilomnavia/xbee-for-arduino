@@ -234,9 +234,9 @@ void Xbee::receive()
       break;
     }
 
-    if (_pos >= FRAME_TYPE_INDEX)
+    if (_pos >= FRAME_TYPE_INDEX && _pos == (getPacketReceivedLength() + 3))
     {
-      _checksum += b;
+       _checksum += b;
     }
 
     switch (_pos)
@@ -297,7 +297,7 @@ void Xbee::receive()
 
       if (_pos == (getPacketReceivedLength() + 3))
       {
-        if ((_checksum & 0xff) == 0xff)
+        if (_checksum == b)
         {
           // Serial.write("Checksum valido");
         }
