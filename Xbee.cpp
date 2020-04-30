@@ -11,6 +11,10 @@ Xbee::Xbee()
   _option = OPTION_DEFAULT;
 }
 
+void Xbee::setSerial(Stream serial){
+
+}
+
 void Xbee::setFrameId(uint8_t frameId)
 {
   _frameId = frameId;
@@ -198,12 +202,12 @@ void Xbee::reset()
 
 bool Xbee::available()
 {
-  return Serial.available() > 0;
+  return Serial3.available() > 0;
 }
 
 uint8_t Xbee::read()
 {
-  return Serial.read();
+  return Serial3.read();
 }
 
 uint16_t Xbee::getPacketReceivedLength()
@@ -219,6 +223,7 @@ void Xbee::setDataFrameLength(uint16_t frameLength)
 void Xbee::receive()
 {
   _checksum = 0;
+  _payloadLength = 0;
 
   while (available())
   {
@@ -297,22 +302,20 @@ void Xbee::receive()
       {
         if ((_checksum & 0xff) == 0xff)
         {
-          Serial.write("Checksum valido");
+          // Serial.write("Checksum valido");
         }
         else
         {
           setError("Error: Checksum invalido");
           return;
         }
-        // minus 4 because we start after start,msb,lsb,api and up to but not including checksum
-        // e.g. if frame was one byte, _pos=4 would be the byte, pos=5 is the checksum, where end stop reading
         setDataFrameLength(_pos - 4);
-        // reset state vars
         _pos = 0;
       }
       else
       {
         _payloadData[_pos - 4] = b;
+        _payloadLength++;
         _pos++;
       }
     }
@@ -346,7 +349,7 @@ void Xbee::writeDecode()
   Serial.print("Direccion 16 bits: ");
   for (int j = 0; j < 2; j++)
   {
-    uint8_t addr16 = _addressReceived[j];
+    uint8_t addr16 = _addressReceived16[j];
     Serial.print(addr16,HEX);
   }
   Serial.println();
