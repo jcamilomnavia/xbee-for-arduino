@@ -45,6 +45,8 @@ class Xbee {
     // Variables para recepcion de paquetes
     uint8_t _msbLength;
     uint8_t _lsbLength;
+    uint8_t _addressReceived[8];
+    uint8_t _addressReceived16[2];
     bool _hasError;
     String _error;
     uint8_t _pos;

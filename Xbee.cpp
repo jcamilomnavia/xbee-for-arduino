@@ -268,14 +268,12 @@ void Xbee::receive()
       break;
     case 5 ... 12: 
       // 64 bit address
-      int addr64[8] = {56, 48, 40, 32, 24, 16, 8, 0};
-      _destinationAddress = b << addr64[_pos-5];
+      _addressReceived[_pos-5] = b;
       _pos++;
       break;
     case 13 ... 14: 
       // 16 bit address
-      int addr16[2] = {8, 0};
-      _destinationAddress16 = b << addr16[_pos-13];
+      _addressReceived16[_pos-13] = b;
       _pos++;
       break;
     case 15: 
@@ -336,19 +334,17 @@ void Xbee::writeDecode()
   Serial.println(getFrameId());
 
   Serial.print("Direccion: ");
-  int bits[8] = {56, 48, 40, 32, 24, 16, 8, 0};
   for (int j = 0; j < 8; j++)
   {
-    uint8_t addr = (getDestinationAddress() >> bits[j]) & 0xff;
+    uint8_t addr = _addressReceived[j];
     Serial.print(addr,HEX);
   }
   Serial.println();
 
   Serial.print("Direccion 16 bits: ");
-  int bits16[2] = {8, 0};
   for (int j = 0; j < 2; j++)
   {
-    uint8_t addr16 = (getDestinationAddress16() >> bits16[j]) & 0xff;
+    uint8_t addr16 = _addressReceived[j];
     Serial.print(addr16,HEX);
   }
   Serial.println();
