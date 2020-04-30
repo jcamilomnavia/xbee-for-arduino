@@ -85,6 +85,9 @@ class Xbee {
     void send();
     void write(uint8_t val);
     void receive();
+    void available();
+    void read()
+    void writeDecode();
 
     void reset();
 };
