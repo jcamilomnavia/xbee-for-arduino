@@ -14,3 +14,10 @@ void setup(){
 void loop(){
 
 }
+
+void serialEvent3(){
+  while(Serial3.available() > 0){
+    xbee.receive();
+  }
+  delay(500);
+}
