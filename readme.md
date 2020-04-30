@@ -49,11 +49,12 @@ Xbee myXbee = Xbee();
 
 void setup(){
   Serial.begin(9600);
+  myXbee.receive();
+  myXbee.writeDecode();
 }
 
 void loop(){
-  // Esto causara que imprima la decodificacion de la trama.
-  myXbee.receive();
+  
 }
 ```
 
@@ -78,25 +79,25 @@ Una peticion de transmision de trama API causa que el modulo envie datos como pa
 
 La siguiente tabla muestra la estructura de la trama cuando se habilita este tipo:
 
-| Campos de la trama    | Byte | Descripción                                    |
-|-----------------------|------|------------------------------------------------|
-| Delimitador de inicio | 1    | 0x7E                                           |
-| Tamaño                | 2-3  | Bit mas significativo, bit menos significativo |
+| Campos de la trama        | Byte | Descripción                                    |
+|---------------------------|------|------------------------------------------------|
+| Delimitador de inicio     | 1    | 0x7E                                           |
+| Tamaño                    | 2-3  | Bit mas significativo, bit menos significativo |
 | **Datos de la Trama**     | 4-n  | De la estructura de la API.                    |
-| Checksum              | n+1  | 1 byte                                         |
+| Checksum                  | n+1  | 1 byte                                         |
 
 
 Los **datos de la trama** que empiezan en el byte 4 en adelante, estan representados por la siguiente tabla:
 
-| Campos de la trama    | Byte           | Descripción                          |
-|-----------------------|----------------|--------------------------------------|
-| Tipo de trama         | 4              | 0x10                                 |
-| ID de la trama        | 5              | ID de la trama (Inicia siempre en 1) |
-| Dirección de destino(MSB)  | 6-13(8)   | Dirección de destino de 64 bits                 |
-| Dirección de destino(LSB)  | 14-15     | Dirección de destino de 16 bits (MSB y LSB)               |
-| Broadcast Radius      | 16             | Especifica el maximo numero de saltos de una transmision broadcast. Si se establece a **0**, los saltos seran los maximos     |
-| Opciones              | 14             | Opciones                             |
-| Datos RF              | 15-n           | Payload (mensaje a enviar)          |
+| Campos de la trama         | Byte           | Descripción                                 |
+|----------------------------|----------------|---------------------------------------------|
+| Tipo de trama              | 4              | 0x10                                        |
+| ID de la trama             | 5              | ID de la trama (Inicia siempre en 1)        |
+| Dirección de destino(MSB)  | 6-13(8)        | Dirección de destino de 64 bits             |
+| Dirección de destino(LSB)  | 14-15          | Dirección de destino de 16 bits (MSB y LSB) |
+| Broadcast Radius           | 16             | Especifica el maximo numero de saltos de una transmision broadcast. Si se establece a **0**, los saltos seran los maximos     |
+| Opciones                   | 14             | Opciones                                    |
+| Datos RF                   | 15-n           | Payload (mensaje a enviar)                  |
 
 Las **opciones**, segun la documentacion, son las siguientes:
 
@@ -117,15 +118,17 @@ Para calcular el Tamaño de la trama se excluyen el Delimitador y el Checksum. D
 
 ### Ejemplo de transmision y recepcion de tramas.
 
-Miremos la siguiente trama: 7E 00 0A **01 01 50 01 01 48 65 6C 6C 6F** B8.
+Miremos la siguiente trama: 7E 00 12 10 01 AA BB CC DD EE FF 11 22 FF FE 00 00 48 6F 6C 61 3F.
 
-| Byte(s)        | Descripción                          |
-|----------------|--------------------------------------|
-| 7E             | Delimitador de inicio                |
-| 00 0A          | Tamaño de la trama                   |
-| 01             | Tipo de la trama (modo AP)           |
-| 01             | ID de la trama (Inicia siempre en 1) |
-| 50 01          | Dirección de destino (debe ser de 64 bits, no 16)       |
-| 01             | Opciones                             |
-| 48 65 6C 6C 6F | Payload                              |
-| B8             | Checksum                             |
+| Byte(s)                  | Descripción                          |
+|--------------------------|--------------------------------------|
+| 7E                       | Delimitador de inicio                |
+| 00 12                    | Tamaño de la trama                   |
+| 10                       | Tipo de la trama (modo AP)           |
+| 01                       | ID de la trama (Inicia siempre en 1) |
+| AA BB CC DD EE FF 11 22  | Dirección de destino                 |
+| FF FE                    | Dirección de destino 16 BITS         |
+| 00                       | Broadcast radius                     |
+| 00                       | Opciones                             |
+| 48 6F 6C 61              | Payload (Hola)                       |
+| 3F                       | Checksum                             |

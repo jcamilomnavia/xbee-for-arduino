@@ -319,9 +319,11 @@ void Xbee::receive()
   }
 }
 
+
 void Xbee::writeDecode()
 {
-  Serial.println("Trama leida");
+  Serial.println();
+  Serial.println("Trama leida:");
   if(_hasError){
     Serial.print(_error);
     return;
