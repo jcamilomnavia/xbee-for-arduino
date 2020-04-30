@@ -353,10 +353,10 @@ void Xbee::writeDecode()
   Serial.println();
 
   Serial.print("BroadCast Radius: ");
-  Serial.println(getBroadcastRadius());
+  Serial.println(getBroadcastRadius(),HEX);
 
   Serial.print("Opciones: ");
-  Serial.println(getOption());
+  Serial.println(getOption(),HEX);
 
   Serial.print("Payload: ");
   for (int i = 0; i < getPayloadSize(); i++)

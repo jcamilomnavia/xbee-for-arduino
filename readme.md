@@ -18,6 +18,7 @@ Para usar esta libreria en tu sketch deberás añadir la siguiente linea al prin
 ## Configuración 
 
 Para usar esta libreria, tu XBee debe estar configurado en modo API. Para configurarlo, referirse a la documentación de XCTU y de DIGI.
+Esta libreria esta hecha para trabajar con Arduino Mega, o cualquier arduino que tenga **Serial** y **Serial3**. 
 
 ## Uso
 
@@ -25,20 +26,24 @@ El Xbee debe estar conectado al **Serial** del Arduino. Si es conectado al Seria
 
 ### Ejemplo en Arduino
 
-Para transmitir tramas:
+Para transmitir tramas entre Arduinos Mega:
 ```C
 #include <Xbee.h>
 Xbee myXbee = Xbee();
 
 void setup(){
   Serial.begin(9600);
+  Serial3.begin();
   myXbee.setPayload("Hola mundo");
+  myXbee.setDestinationAddress(0xAABBCCDDEEFF1122);
+  // myXbee.setBroadcastRadius(0x02);
+  // myXbee.setOption(0x20);
+  // ... otras opciones
+  myXbee.send();
 }
 
 void loop(){
-  myXbee.setPayload("Hola mundo");
-  myXbee.setDestinationAddress(0xAABBCCDDEEFF1122);
-  myXbee.send();
+  
 }
 ```
 
@@ -49,6 +54,7 @@ Xbee myXbee = Xbee();
 
 void setup(){
   Serial.begin(9600);
+  Serial3.begin();
   myXbee.receive();
   myXbee.writeDecode();
 }
