@@ -183,7 +183,7 @@ void Xbee::write(uint8_t val)
   //Serial.print(val2);
   Serial.print(val,HEX);
   Serial.print(" ");
-  Serial.print3(val);
+  Serial3.write(val);
 }
 
 void Xbee::reset()
@@ -226,7 +226,7 @@ void Xbee::receive()
   {
 
     b = read();
-    Serial.print(b);
+    Serial.print(b,HEX);
 
     if (_pos > 0 && b == START_BYTE)
     {
@@ -306,12 +306,13 @@ void Xbee::receive()
           setError("Error: Checksum invalido");
           return;
         }
+        // Sin contar delimitador, 2 bytes de tamaño, y checksum
         setDataFrameLength(_pos - 4);
         _pos = 0;
       }
       else
       {
-        _payloadData[_pos - 4] = b;
+        _payloadData[_pos - 17] = b;
         _payloadLength++;
         _pos++;
       }
