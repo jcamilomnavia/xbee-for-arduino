@@ -102,8 +102,8 @@ Los **datos de la trama** que empiezan en el byte 4 en adelante, estan represent
 | Dirección de destino(MSB)  | 6-13(8)        | Dirección de destino de 64 bits             |
 | Dirección de destino(LSB)  | 14-15          | Dirección de destino de 16 bits (MSB y LSB) |
 | Broadcast Radius           | 16             | Especifica el maximo numero de saltos de una transmision broadcast. Si se establece a **0**, los saltos seran los maximos     |
-| Opciones                   | 14             | Opciones                                    |
-| Datos RF                   | 15-n           | Payload (mensaje a enviar)                  |
+| Opciones                   | 17             | Opciones                                    |
+| Datos RF                   | 18-n           | Payload (mensaje a enviar)                  |
 
 Las **opciones**, segun la documentacion, son las siguientes:
 
@@ -115,14 +115,29 @@ Las **opciones**, segun la documentacion, son las siguientes:
 
 
 ### Tamaño de la trama
-Para calcular el Tamaño de la trama se excluyen el Delimitador y el Checksum. De esta manera se obtiene el length y se deben partir en *bits mas significativos(MSB) y bits menos significativos(LSB)*
+Para calcular el Tamaño de la trama se excluyen el Delimitador y el Checksum ( Y claramente los Bytes del tamaño, pues apenas se calcularas). Luego sumaremos cuantos Bytes tenemos. Es decir, si tenemos 0xFF 0xFF 0xFF tenemos 3 bytes en total. De esta manera se obtiene el length y se deben partir en *8 bits mas significativos(MSB) y 8 bits menos significativos(LSB)* para ser enviados en la trama.
+
+Sabemos bien que en la trama hay un tamaño de Bytes fijo que es 14. Conformados por: 
+- 1 Byte de Tipo de trama
+- 1 Byte de ID de Trama
+- 8 Bytes de Direccion destino
+- 2 Bytes de Direccion de 16 bits
+- 1 Byte de Broadcast Radius
+- 1 Bytes de Opciones
+
+El resto del tamaño de la trama dependera de la longitud del Payload.
 
 ### Checksum
-**Calcular:** Para calcular el checksum no se incluyen ni el delimitador de inicio ni el tamaño de la trama. Se suman el resto de bytes y se conservan los 8 bits mas bajos del resultado. Luego restaremos el resultado de 0xFF y este dara el resultado del checksum.
 
-**Verificar:** Sumar todos los Bytes(incluido el checksum, pero no el delimitador ni el tamaño). Si el checksum es correcto, debe dar igual a 0xFF.
+El checksum es una suma de verificación (o suma de chequeo), es una función de redundancia que tiene como propósito principal detectar cambios accidentales en una secuencia de datos para proteger la integridad de estos mismos, verificando que no haya discrepancias entre los valores obtenidos al hacer una comprobación inicial y otra final tras la transmisión. 
+
+**Calcular:** Para calcular el checksum de una trama se hace lo siguiente: se suman todos sus elementos (Bytes) excepto el delimitador de incio y el tamaño de la trama. Luego, con los 8 bits mas bajos del resultado, se lo restamos a 0xFF y ese seria el checksum de la trama.
+
+**Verificar:** Para verificar la trama, sumaremos todos los Bytes de la trama (menos el delimitador y el tamaño de la trama, pero incluyendo el checksum) y el resultado debe dar 0xFF.
 
 ### Ejemplo de transmision y recepcion de tramas.
+
+#### Transmisión
 
 Miremos la siguiente trama: 7E 00 12 10 01 AA BB CC DD EE FF 11 22 FF FE 00 00 48 6F 6C 61 3F.
 
@@ -138,3 +153,33 @@ Miremos la siguiente trama: 7E 00 12 10 01 AA BB CC DD EE FF 11 22 FF FE 00 00 4
 | 00                       | Opciones                             |
 | 48 6F 6C 61              | Payload (Hola)                       |
 | 3F                       | Checksum                             |
+
+Para obtener el anterior tamaño de la trama sumaremos la cantidad de Bytes fijos que hay (14) y simplemente le sumaremos 4(tamaño del payload) lo cual nos dará 18, este valor en hexadecimal es representado como 0x12.
+Luego obtendremos su MSB(0x00) y su LSB(0x12).
+
+Para obtener el anterior checksum sumamos desde el tipo de trama en adelante hasta el checksum y :
+0x10 + 0x01 + 0xAA + 0xBB+ 0xCC + 0xDD + 0xEE + 0xFF + 0x11 + 0x22 + 0xFF + 0xFE + 0x00 + 0x00 + 0x48 + 0x6F + 0x6C + 0x61 = 0x8C0
+Ahora restamos 0x8C0 (sus 8 bits mas bajos, 0xC0) de 0xFF, con esto obtenemos que:
+0xFF - 0xC0 = 0x3F
+
+#### Recepción
+Recibiremos (por serial en este caso) la anterior trama:  7E 00 12 10 01 AA BB CC DD EE FF 11 22 FF FE 00 00 48 6F 6C 61 3F.
+
+Sabremos que es una nueva trama por el delimitador de inicio: 0x7E
+
+A partir de aqui, hasta el Byte de opciones, son tamaños y posiciones fijas, por lo que podremos decodificar facilmente la información de la trama (Las posiciones de cada Byte estan descritos en la tabla 2 y 3 de este documento).
+
+Para el tamaño, obtendremos sus 2 Bytes y se sumarán, pues el primer Byte(MSB) y el segundo(LSB) formarán una variable de 16 bits. En este caso 0x00 + 0x12 = 0x12 = 18 en decimal.
+
+Desde el tipo de trama hasta el byte de opciones no requiere mayor explicación. Solo hay que tener en cuenta las posiciones fijas de cada Byte. Para esta librería se implementa un switch case.
+
+Sabemos que el payload empieza en el Byte 18. Desde aqui hasta el penultimo Byte de la trama o ultima posicion del tamaño anteriormente obtenido(recordar que el tamaño solo hace referencia desde el Byte 4 hasta el final del payload, ver tabla 2 para mayor comprensión), sera todo nuestro Payload. En este caso:  48 6F 6C 61 = "Hola".
+
+Verificaremos la trama recibida: 
+0x10 + 0x01 + 0xAA + 0xBB+ 0xCC + 0xDD + 0xEE + 0xFF + 0x11 + 0x22 + 0xFF + 0xFE + 0x00 + 0x00 + 0x48 + 0x6F + 0x6C + 0x61 + **0x3F** = 0xFF.
+
+La suma es 0xFF por lo que la trama fue bien recibida.
+
+Finalmente imprimiremos la información decodificada en serial, todos los valores seran impresos en formato Hexadecimal excepto el payload y el tamaño de la trama.
+- Para imprimir en decimal usaremos ```Serial.print(value, HEX)```
+- Para imprimir en formato ASCII podemos asignar el valor leído a un ```char``` y luego imprimirlo con ```Serial.print(var)```. Esto para el payload.
