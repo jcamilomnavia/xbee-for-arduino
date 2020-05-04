@@ -183,3 +183,33 @@ La suma es 0xFF por lo que la trama fue bien recibida.
 Finalmente imprimiremos la información decodificada en serial, todos los valores seran impresos en formato Hexadecimal excepto el payload y el tamaño de la trama.
 - Para imprimir en decimal usaremos ```Serial.print(value, HEX)```
 - Para imprimir en formato ASCII podemos asignar el valor leído a un ```char``` y luego imprimirlo con ```Serial.print(var)```. Esto para el payload.
+
+## Documentacion de la librería
+
+### Cómo se realizó esta librería
+
+Para crear una libreria de Arduino, es necesario comprender sus componentes. Como bien se sabe, los archivos **.ino** están escritos en C. Por lo tanto los archivos de las librerías deben estar escritos en C o en C++. En este caso se ha escogido C++ ya que las librerias mas modernas estan escritas en este lenguaje.
+
+Para una libreria se necesitan al menos 2 archivos:
+- Un archivo de cabecera (aquel que tiene la extension ```.h```). Este archivo contiene las definiciones de la libreria, en pocas palabras, un listado de todo lo que esta contiene. Alli econtraremos definicion de constantes, variables, metodos y documentacion de estos.
+- Un archivo fuente (aquel con extension ```.cpp```). Aquí encontraremos todo el código implementado anteriormente definido en el archivo .h.
+
+El siguiente paso es, como estamos creando una libreria para Arduino, debemos incluir todas las caracteristicas base o el nucleo de este, para eso, incluiremos en el archivo ```.h``` otro archivo cabecera:
+```C++
+#include "Arduino.h"
+```
+
+Asi podremos usar comandos como ```Serial.print()``` entre otros.
+
+Ahora, para que el entorno de Arduino pueda reconocer el nombre de nuestros metodos y variables públicas, debemos crear un archivo llamado ```keywords.txt``` que llevará el contenido de la siguiente manera:
+```txt
+Xbee	KEYWORD1
+send	KEYWORD2
+read	KEYWORD2
+...
+```
+El contenido lleva el nombre de la palabra clave, seguido de *tab*(no espacios), seguido del tipo de KEYWORD. Las clases deberian ser KEYWORD1(se vuelven color naranja), metodos/funciones KEYWORD2 y serán color café.
+
+También se deberán proveer ejemplos de la libreria. Para esto crearemos un directorio llamado ```examples``` y alli se copiaran algunos ejemplos usando la libreria. De esta manera, el usuario de la libreria los podra importar a arduino facilmente.
+
+Para esta librería se siguieron los consejos de [ARDUINO API STYLE GUIDE](https://www.arduino.cc/en/Reference/APIStyleGuide).

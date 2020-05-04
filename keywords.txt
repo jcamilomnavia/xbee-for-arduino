@@ -1,25 +1,30 @@
-Xbee
+Xbee	KEYWORD1
 
-_frameType
-_frameId
-_destinationAddress
-_option
-_payloadData
-_dataFrameLength
-_checksum
+setFrameId	KEYWORD2
+setDestinationAddress	KEYWORD2
+setOption	KEYWORD2
+setPayload	KEYWORD2
+setError	KEYWORD2
+setlsbLength	KEYWORD2
+setmsbLength	KEYWORD2
 
-setFrameId
-setDestinationAddress
-setOption
-setPayload
+getFrameType	KEYWORD2
+getFrameId	KEYWORD2
+getOption	KEYWORD2
+getDestinationAddress	KEYWORD2
+getPayload	KEYWORD2
+getPayloadSize	KEYWORD2
+getDataFrameLength	KEYWORD2
 
-getFrameType
-getFrameId
-getOption
-getDestinationAddress
-getPayload
-getDataFrameLength
+getPacketReceivedLength	KEYWORD2
+getmsbLength	KEYWORD2
+getlsbLength	KEYWORD2
+getError	KEYWORD2
 
-send
-write(val)
-reset
+send	KEYWORD2
+write	KEYWORD2
+reset	KEYWORD2
+writeDecode	KEYWORD2
+read	KEYWORD2
+available	KEYWORD2
+receive	KEYWORD2

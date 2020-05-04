@@ -1,3 +1,7 @@
+/*
+  Xbee.h - Libreria para comunicacion de tramas con XBee.
+  Creada por Juan Camilo Marin Navia, Abril, 2020.
+*/
 #ifndef Xbee_h
 #define Xbee_h
 
